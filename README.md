@@ -165,25 +165,4 @@ Contributions are welcome! Please feel free to:
 - Submit pull requests with improvements
 - Improve documentation
 
-## 📝 License
 
-This project is open source and available under the MIT License.
-
-## 👥 Authors
-
-- Original author: Rohith
-- Maintained by: Fashion Recommendation System Contributors
-
-## 🙏 Acknowledgments
-
-- Thanks to all contributors who have helped improve this project
-- Special thanks to the deep learning community for educational resources
-- ImageNet and other datasets that inspired model architecture
-
-## 📧 Support
-
-For issues, questions, or suggestions, please open an issue on the GitHub repository or contact the development team.
-
----
-
-**Note**: Please ensure you have the necessary computational resources for model training. GPU acceleration is recommended for optimal training performance.
