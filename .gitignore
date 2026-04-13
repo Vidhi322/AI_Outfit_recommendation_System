@@ -1,0 +1,7 @@
+__pycache__/
+*.pyo
+*.pyd
+.env
+instance/
+users/
+*.dbgit rm -r --cached __pycache__
