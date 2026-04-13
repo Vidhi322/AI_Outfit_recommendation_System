@@ -1,0 +1,83 @@
+{% extends "logintemplate.html" %}
+{% block navbar %}
+<nav class="main-nav">
+    <a href="/">Home</a>
+    <a href="/userprofile">Wardrobe</a>
+    <a href="/logout" class="nav-cta">Sign Out</a>
+</nav>
+{% endblock %}
+<script>
+    var loadFile = function (event) {
+        var image = document.getElementById('output');
+        image.src = URL.createObjectURL(event.target.files[0]);
+    };
+</script>
+{% block content %}
+<div style="max-width:700px;margin:0 auto;">
+    <h1 class="hero-title">
+        Recommended <em>Outfits</em>
+    </h1>
+
+    <p class="hero-desc">
+        Here are your best matches based on color theory and occasion
+    </p>
+    <div class="action-bar" style="margin-bottom:2.5rem;">
+        <!-- <a href="/fashion" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            Upload Item
+        </a> -->
+        <a href="/select" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 4v6h6" />
+                <path d="M3.51 15a9 9 0 102.13-9.36L1 10" />
+            </svg>
+            Try Again
+        </a>
+    </div>
+
+    <div
+        style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.25rem;margin-bottom:2.5rem;">
+        {% for i in img %}
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+            <img height="260" style="width:100%;height:260px;object-fit:cover;display:block;"
+                src="{{ url_for('download_file', filename=i) }}" alt="Recommended outfit">
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        {% if hiden == "hidden1" %}
+        <button onclick="location.href= '/recommendprev';" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 5l-7 7 7 7" />
+            </svg>
+            Previous
+        </button>
+        {% elif hiden == "hidden2" %}
+        <button onclick="location.href= '/recommendnext';" class="btn btn-primary">
+            Next
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+        </button>
+        {% else %}
+        <button onclick="location.href= '/recommendnext';" class="btn btn-primary">
+            Next
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+        </button>
+        <button onclick="location.href= '/recommendprev';" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 5l-7 7 7 7" />
+            </svg>
+            Previous
+        </button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

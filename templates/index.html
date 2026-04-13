@@ -1,0 +1,363 @@
+<html>
+<head>
+    <title>Vogue AI — Fashion Recommendation System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg: #0f0e0d;
+            --surface: #181614;
+            --surface2: #221f1c;
+            --border: #2e2a26;
+            --border-light: #3a3530;
+            --accent: #c9a96e;
+            --text-primary: #f0ece6;
+            --text-secondary: #9a9088;
+            --text-muted: #5a5248;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* NAV */
+        .site-header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(15, 14, 13, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 64px;
+        }
+
+        .site-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem; font-weight: 300;
+            letter-spacing: 0.25em; text-transform: uppercase;
+            color: var(--accent); text-decoration: none;
+        }
+        .site-logo span { color: var(--text-secondary); }
+
+        nav a {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.45rem 1rem;
+            font-size: 0.78rem; font-weight: 400;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-secondary); text-decoration: none;
+            border-radius: 4px; transition: color 0.2s, background 0.2s;
+        }
+        nav a:hover { color: var(--text-primary); background: var(--surface2); }
+
+        nav a.nav-cta {
+            background: var(--accent); color: var(--bg);
+            font-weight: 500; padding: 0.45rem 1.1rem;
+        }
+        nav a.nav-cta:hover { background: #d4b580; color: var(--bg); }
+
+        /* HERO */
+        .hero {
+            min-height: 70vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(201,169,110,0.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            font-size: 0.7rem; font-weight: 500;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--accent);
+            border: 1px solid rgba(201,169,110,0.3);
+            padding: 0.3rem 1rem; border-radius: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 300; line-height: 1.05;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+        }
+
+        .hero-title em { font-style: italic; color: var(--accent); }
+
+        .hero-desc {
+            max-width: 560px;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.8rem 2rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem; font-weight: 500;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            text-decoration: none; border: none; border-radius: 4px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-primary { background: var(--accent); color: var(--bg); }
+        .btn-primary:hover { background: #d4b580; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-light); color: var(--text-secondary); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* FEATURES */
+        .features {
+            max-width: 1100px; margin: 0 auto; padding: 5rem 2rem;
+        }
+
+        .section-eyebrow {
+            font-size: 0.7rem; font-weight: 500;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem; font-weight: 300;
+            color: var(--text-primary);
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 2rem;
+            transition: background 0.2s;
+        }
+        .feature-card:hover { background: var(--surface2); }
+
+        .feature-icon {
+            width: 40px; height: 40px;
+            background: rgba(201,169,110,0.08);
+            border: 1px solid rgba(201,169,110,0.2);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-icon svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+        .feature-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem; font-weight: 400;
+            margin-bottom: 0.6rem;
+            color: var(--text-primary);
+        }
+
+        .feature-desc { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.7; }
+
+        /* TEAM */
+        .team { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+
+        .team-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex; align-items: flex-start; gap: 1rem;
+            transition: border-color 0.2s;
+        }
+        .team-card:hover { border-color: var(--border-light); }
+
+        .team-avatar {
+            width: 42px; height: 42px; flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(201,169,110,0.15), rgba(201,169,110,0.05));
+            border: 1px solid rgba(201,169,110,0.2);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem; font-weight: 600;
+            color: var(--accent);
+        }
+
+        .team-info { flex: 1; }
+        .team-name { font-size: 0.95rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.2rem; }
+        .team-role { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+
+        .team-link {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            font-size: 0.75rem; color: var(--accent); text-decoration: none;
+            letter-spacing: 0.04em;
+            transition: gap 0.2s;
+        }
+        .team-link:hover { gap: 0.5rem; }
+
+        /* DIVIDER LINE */
+        hr.section-divider {
+            border: none; border-top: 1px solid var(--border);
+            max-width: 1100px; margin: 0 auto;
+        }
+
+        /* FOOTER */
+        .site-footer {
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 3rem;
+        }
+        .site-footer p { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.05em; }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <a href="/" class="site-logo">Vogue <span>AI</span></a>
+    {%if current_user.is_authenticated %}
+    <nav style="display:flex;align-items:center;gap:0.25rem;">
+        <a href="/">Home</a>
+        <a href="/userprofile">Wardrobe</a>
+        <a href="/logout" class="nav-cta">Sign Out</a>
+    </nav>
+    {% else %}
+    <nav style="display:flex;align-items:center;gap:0.25rem;">
+        <a href="/">Home</a>
+        <a href="/login">Sign In</a>
+        <a href="/signup" class="nav-cta">Get Started</a>
+    </nav>
+    {% endif %}
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <span class="hero-tag">AI-Powered Style Intelligence</span>
+    <h1 class="hero-title">
+        Your Digital<br><em>Wardrobe</em><br>Reimagined
+    </h1>
+    <p class="hero-desc">
+        The Fashion Recommendation System uses deep learning to understand your wardrobe and curate the perfect outfit for every occasion — automatically.
+    </p>
+    <div class="hero-actions">
+        <a href="/signup" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Start Styling
+        </a>
+        <a href="/login" class="btn btn-outline">Sign In</a>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+    <p class="section-eyebrow">How It Works</p>
+    <h2 class="section-title">Intelligent fashion, effortlessly curated</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <h3 class="feature-title">Upload Your Wardrobe</h3>
+            <p class="feature-desc">Photograph your clothes and our AI instantly identifies the type and color of each garment with precision.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+            </div>
+            <h3 class="feature-title">AI Analysis</h3>
+            <p class="feature-desc">Deep learning models analyze color, style attributes to build a smart profile of your collection.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            </div>
+            <h3 class="feature-title">Outfit Recommendations</h3>
+            <p class="feature-desc">Select an occasion — party, Casual, College or sports — and receive perfectly matched outfit combinations from your wardrobe.</p>
+        </div>
+    </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- TEAM -->
+<section class="team">
+    <p class="section-eyebrow">Built By</p>
+    <h2 class="section-title">The Team</h2>
+    <div class="team-grid">
+        <div class="team-card">
+            <div class="team-avatar">VJ</div>
+            <div class="team-info">
+                <p class="team-name">Jain Vidhi</p>
+                <p class="team-role">Flask Backend</p>
+                <a class="team-link" href="mailto:23002171410021@mail.ljku.edu.in">
+                    Contact
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="team-card">
+            <div class="team-avatar">KG</div>
+            <div class="team-info">
+                <p class="team-name">Kasak Gohil</p>
+                <p class="team-role">ML models</p>
+                <a class="team-link" href="mailto:23002171410014@mail.ljku.edu.in">
+                    Contact
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="team-card">
+            <div class="team-avatar">PJ</div>
+            <div class="team-info">
+                <p class="team-name">Prachi Jagad</p>
+                <p class="team-role">UI system</p>
+                <a class="team-link" href="mailto:23002171410018@mail.ljku.edu.in">
+                    Contact
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="team-card">
+            <div class="team-avatar">AH</div>
+            <div class="team-info">
+                <p class="team-name">Ayesha Hawa</p>
+                <p class="team-role">Recommendation logic</p>
+                <a class="team-link" href="mailto:23002171410017@mail.ljku.edu.in">
+                    Contact
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <p>© 2026 Vogue AI — Fashion Recommendation System</p>
+    <p>Powered by Deep Learning</p>
+</footer>
+
+</body>
+</html>

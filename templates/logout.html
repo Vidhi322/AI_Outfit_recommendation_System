@@ -1,0 +1,51 @@
+{% extends "logintemplate.html" %}
+
+{% block navbar %}
+<nav class="main-nav">
+    <a href="/">Home</a>
+    <a href="/login">Sign In</a>
+    <a href="/signup" class="nav-cta">Get Started</a>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<section class="hero" style="min-height:80vh; display:flex; align-items:center; justify-content:center;">
+
+    <div style="max-width:420px; width:100%; text-align:center;">
+
+        <!-- ICON -->
+        <div style="
+            width:60px;
+            height:60px;
+            margin:0 auto 2rem;
+            border-radius:50%;
+            border:1px solid rgba(201,169,110,0.25);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:rgba(201,169,110,0.05);
+        ">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="#c9a96e" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+
+        <!-- TITLE -->
+        <h1 class="hero-title" style="font-size:2.4rem;">
+            Signed <em>Out</em>
+        </h1>
+
+        <!-- SUBTEXT -->
+        <p class="hero-desc" style="margin-top:0.8rem;">
+            You’ve stepped away from your wardrobe.<br>
+            We’ll be here when you return.
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}

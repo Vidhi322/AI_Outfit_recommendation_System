@@ -1,0 +1,220 @@
+
+<html>
+<head>
+    <title>My Wardrobe — Vogue AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0e0d; --surface: #181614; --surface2: #221f1c;
+            --border: #2e2a26; --border-light: #3a3530;
+            --accent: #c9a96e; --accent-dim: #8a6d42;
+            --text-primary: #f0ece6; --text-secondary: #9a9088; --text-muted: #5a5248;
+            --danger: #c0392b; --radius: 4px; --radius-lg: 8px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text-primary); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; }
+
+        .site-header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(15,14,13,0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2.5rem;
+            display: flex; align-items: center; justify-content: space-between; height: 64px;
+        }
+        .site-logo { font-family: 'Cormorant Garamond',serif; font-size: 1.25rem; font-weight: 300; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
+        .site-logo span { color: var(--text-secondary); }
+        nav a { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 1rem; font-size: 0.78rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); text-decoration: none; border-radius: var(--radius); transition: color 0.2s, background 0.2s; }
+        nav a:hover { color: var(--text-primary); background: var(--surface2); }
+        nav a.nav-cta { background: var(--accent); color: var(--bg); font-weight: 500; }
+        nav a.nav-cta:hover { background: #d4b580; color: var(--bg); }
+
+        .page-wrapper { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; }
+
+        .page-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title { font-family: 'Cormorant Garamond',serif; font-size: 2.2rem; font-weight: 300; }
+        .page-title em { font-style: italic; color: var(--accent); }
+        .page-meta { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        .action-bar { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.4rem; font-family: 'DM Sans',sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; text-decoration: none; border: none; border-radius: var(--radius); cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: var(--bg); }
+        .btn-primary:hover { background: #d4b580; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-light); color: var(--text-secondary); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-danger { background: transparent; border: 1px solid rgba(192,57,43,0.4); color: #e57373; }
+        .btn-danger:hover { background: rgba(192,57,43,0.1); border-color: var(--danger); }
+
+        .flash-messages { margin-bottom: 1.5rem; }
+        .alert { padding: 0.75rem 1rem; border-radius: var(--radius); margin-bottom: 0.5rem; font-size: 0.85rem; }
+        .alert-error { background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3); color: #e57373; }
+
+        .wardrobe-section { margin-bottom: 3rem; }
+        .section-label { display: flex; align-items: center; gap: 0.75rem; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 1.25rem; }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        .clothes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem; }
+
+        .clothes-item { position: relative; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: border-color 0.2s, transform 0.15s; background: var(--surface2); }
+        .clothes-item:hover { border-color: var(--border-light); transform: translateY(-2px); }
+
+        .clothes-item label { display: block; cursor: pointer; }
+        .clothes-item input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .clothes-item input[type="checkbox"]:checked ~ .item-check { opacity: 1; }
+        .clothes-item:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+        .clothes-item img { width: 100%; height: 190px; object-fit: cover; display: block; }
+
+        .item-check {
+            position: absolute; top: 0.5rem; right: 0.5rem;
+            width: 22px; height: 22px;
+            background: var(--accent); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.15s;
+        }
+        .item-check svg { width: 11px; height: 11px; stroke: var(--bg); fill: none; stroke-width: 3; }
+
+        .empty-state { grid-column: 1/-1; padding: 2.5rem; text-align: center; background: var(--surface2); border: 1px dashed var(--border-light); border-radius: var(--radius-lg); color: var(--text-muted); font-size: 0.85rem; }
+
+        .sticky-bar { position: sticky; bottom: 0; background: rgba(15,14,13,0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--border); padding: 1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; }
+        .sticky-bar p { font-size: 0.82rem; color: var(--text-secondary); }
+
+        .site-footer { border-top: 1px solid var(--border); padding: 1.5rem 2.5rem; display: flex; align-items: center; justify-content: space-between; margin-top: 2rem; }
+        .site-footer p { font-size: 0.75rem; color: var(--text-muted); }
+    </style>
+    <script>
+        $('button[type="submit"]').on('click', function() {
+            var checkboxes = document.getElementsByName('clothes');
+            document.getElementById("some").innerHTML=checkboxes[0];
+        });
+    </script>
+</head>
+<body>
+
+<header class="site-header">
+    <a href="/" class="site-logo">Vogue <span>AI</span></a>
+    <nav style="display:flex;align-items:center;gap:0.25rem;">
+        <a href="/">Home</a>
+        <a href="/userprofile">Wardrobe</a>
+        <a href="/logout" class="nav-cta">Sign Out</a>
+    </nav>
+</header>
+
+<form action="\updatedwardrobe" method="POST" onsubmit="return confirm('Remove selected items from your wardrobe?');">
+<main class="page-wrapper">
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">My <em>Wardrobe</em></h1>
+            <!-- <p class="page-meta">Signed in as {{ current_user.uname }}</p> -->
+        </div>
+        <div class="action-bar">
+            <a href="/fashion" class="btn btn-outline">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Item
+            </a>
+            <a href="/select" class="btn btn-primary">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                Get Recommendations
+            </a>
+        </div>
+    </div>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-error">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <span id="some" style="display:none;"></span>
+
+    <div class="wardrobe-section">
+        <p class="section-label">Shirts</p>
+        <div class="clothes-grid">
+            {% for i in lshirts %}
+            <div class="clothes-item">
+                <label>
+                    <input type="checkbox" name="cloth" value="{{i}}">
+                    <img src="{{ url_for('download_file', filename=i) }}" alt="Shirt">
+                    <div class="item-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                </label>
+            </div>
+            {% else %}
+            <div class="empty-state">No shirts in your wardrobe yet. Upload some to get started.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="wardrobe-section">
+        <p class="section-label">T-Shirts</p>
+        <div class="clothes-grid">
+            {% for i in ltshirts %}
+            <div class="clothes-item">
+                <label>
+                    <input type="checkbox" name="cloth" value="{{i}}">
+                    <img src="{{ url_for('download_file', filename=i) }}" alt="T-Shirt">
+                    <div class="item-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                </label>
+            </div>
+            {% else %}
+            <div class="empty-state">No t-shirts in your wardrobe yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="wardrobe-section">
+        <p class="section-label">Pants</p>
+        <div class="clothes-grid">
+            {% for i in lpants %}
+            <div class="clothes-item">
+                <label>
+                    <input type="checkbox" name="cloth" value="{{i}}">
+                    <img src="{{ url_for('download_file', filename=i) }}" alt="Pants">
+                    <div class="item-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                </label>
+            </div>
+            {% else %}
+            <div class="empty-state">No pants in your wardrobe yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="wardrobe-section">
+        <p class="section-label">Shoes</p>
+        <div class="clothes-grid">
+            {% for i in lshoes %}
+            <div class="clothes-item">
+                <label>
+                    <input type="checkbox" name="cloth" value="{{i}}">
+                    <img src="{{ url_for('download_file', filename=i) }}" alt="Shoes">
+                    <div class="item-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                </label>
+            </div>
+            {% else %}
+            <div class="empty-state">No shoes in your wardrobe yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+</main>
+
+<div class="sticky-bar">
+    <p>Select items to remove from your wardrobe</p>
+    <input class="btn btn-danger" type="submit" value="Remove Selected Items">
+</div>
+</form>
+
+<footer class="site-footer">
+    <p>© 202 Vogue AI</p>
+    <p>Powered by Deep Learning</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "logintemplate.html" %}
+{%block navbar %}
+<nav class="main-nav">
+    <a href="/">Home</a>
+    <a href="/login">Sign In</a>
+    <a href="/signup" class="nav-cta">Get Started</a>
+</nav>
+{% endblock %}
+{% block content %}
+<div style="max-width:480px;margin:6rem auto;text-align:center;">
+    <div style="width:56px;height:56px;background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <h1 class="page-title" style="font-size:1.8rem;">Account <em>Status</em></h1>
+    <div class="alert {% if 'success' in pred|lower or 'created' in pred|lower or 'registered' in pred|lower %}alert-success{% else %}alert-error{% endif %}" style="margin-top:1.5rem;text-align:left;">
+        {{ pred }}
+    </div>
+    <div style="display:flex;gap:0.75rem;justify-content:center;margin-top:1.5rem;">
+        <a href="/login" class="btn btn-primary">Sign In</a>
+        <a href="/signup" class="btn btn-outline">Try Again</a>
+    </div>
+</div>
+{% endblock %}

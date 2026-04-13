@@ -1,0 +1,66 @@
+{% extends "logintemplate.html" %}
+
+{% block navbar %}
+<nav style="display:flex;align-items:center;gap:0.25rem;">
+    <a href="/">Home</a>
+    <a href="/login">Sign In</a>
+    <a href="/signup" class="nav-cta">Get Started</a>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <span class="hero-tag">Join Vogue AI</span>
+
+    <h1 class="hero-title">
+        Create <em>Account</em>
+    </h1>
+
+    <p class="hero-desc">
+        Join and build your digital wardrobe with AI-powered styling.
+    </p>
+
+    <div class="hero-actions">
+
+        <div class="card">
+
+            <form action="/signupresult" method="POST">
+
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input class="form-input" type="text" name="uname" placeholder="Choose a username">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input class="form-input" type="password" name="pwd" placeholder="Create a password">
+                </div>
+
+                {% if pred %}
+                <div class="alert alert-error">{{ pred }}</div>
+                {% endif %}
+
+                <button class="btn btn-primary">
+                    Create Account
+                </button>
+
+            </form>
+
+            <div class="divider"></div>
+
+            <p class="hero-desc">
+                Already have an account?
+                <a href="/login" style="color:var(--accent);text-decoration:none;">
+                    Sign in
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

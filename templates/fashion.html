@@ -1,0 +1,196 @@
+{% extends "logintemplate.html" %}
+
+{% block navbar %}
+<nav style="display:flex;align-items:center;gap:0.25rem;">
+    <a href="/">Home</a>
+    <a href="/userprofile">Wardrobe</a>
+    <a href="/logout" class="nav-cta">Sign Out</a>
+</nav>
+{% endblock %}
+
+<script>
+var loadFile = function(event) {
+    var image = document.getElementById('output');
+    image.src = URL.createObjectURL(event.target.files[0]);
+};
+</script>
+
+{% block content %}
+
+<section class="hero">
+
+    <span class="hero-tag">Wardrobe Management</span>
+
+    <h1 class="hero-title">
+        Upload Your <em>Style</em>
+    </h1>
+
+    <p class="hero-desc">
+        Add new items to your digital wardrobe and let AI classify them instantly.
+    </p>
+
+    <!-- <div class="hero-actions">
+
+        <a href="/userprofile" class="btn btn-outline">Outfit Recommender</a>
+
+    </div> -->
+
+    <div class="card" style="margin-top:2rem; max-width:500px; width:100%;">
+
+        <!-- <p class="hero-desc">
+            Logged in as <strong>{{ current_user.uname }}</strong>
+        </p> -->
+
+        <form id="uploadForm" action="/fashionpredict" method="POST" enctype="multipart/form-data">
+
+    <!-- DRAG DROP -->
+    <div id="drop-area" class="upload-box">
+        <p class="upload-text">Drag & drop your image</p>
+        <p class="upload-sub">or click to browse</p>
+
+        <input 
+            type="file" 
+            id="img" 
+            name="img" 
+            accept="image/*"
+            onchange="loadFile(event)"
+            required
+        >
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview-wrapper">
+        <img id="output" src="{{url_for('static', filename='test.jpg')}}" />
+    </div>
+
+    <button type="submit" class="btn btn-outline">
+        Predict Type & Color
+    </button>
+
+</form>
+
+<!-- LOADING -->
+<div id="loading" class="loading hidden">
+    <div class="spinner"></div>
+    <p>Analyzing your outfit...</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- RESULT UI -->
+{% if pred and pred2 %}
+<div style="margin-top:2rem; text-align:center;">
+
+    <p class="hero-tag">Prediction Result</p>
+
+    <h2 class="hero-title" style="font-size:2rem;">
+        {{ pred }} • <em>{{ pred2 }}</em>
+    </h2>
+
+    <p class="hero-desc">
+        Your outfit has been analyzed successfully.
+    </p>
+
+</div>
+{% endif %}
+        <!-- FINAL UPLOAD -->
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <label class="form-label">Type of Outfit</label>
+                <select class="form-input" name="type" id="type">
+
+                    {% if pred == "shirt" %}
+                        <option value="shirt" selected>Shirt</option>
+                        <option value="t-shirt">T-Shirt</option>
+                        <option value="pants">Pants</option>
+                        <option value="shoes">Shoes</option>
+
+                    {% elif pred == "t-shirt" %}
+                        <option value="shirt">Shirt</option>
+                        <option value="t-shirt" selected>T-Shirt</option>
+                        <option value="pants">Pants</option>
+                        <option value="shoes">Shoes</option>
+
+                    {% elif pred == "pants" %}
+                        <option value="shirt">Shirt</option>
+                        <option value="t-shirt">T-Shirt</option>
+                        <option value="pants" selected>Pants</option>
+                        <option value="shoes">Shoes</option>
+
+                    {% elif pred == "shoes" %}
+                        <option value="shirt">Shirt</option>
+                        <option value="t-shirt">T-Shirt</option>
+                        <option value="pants">Pants</option>
+                        <option value="shoes" selected>Shoes</option>
+
+                    {% else %}
+                        <option value="shirt">Shirt</option>
+                        <option value="t-shirt">T-Shirt</option>
+                        <option value="pants">Pants</option>
+                        <option value="shoes">Shoes</option>
+                    {% endif %}
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Color of Outfit</label>
+                <select class="form-input" name="color" id="color">
+
+                    
+                    {% for c in ["black","blue","brown","green","grey","khaki","marron","orange","pink","red","white","yellow"] %}
+                        <option value="{{c}}" {% if pred2 == c %}selected{% endif %}>{{c.capitalize()}}</option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+            <button class="btn btn-primary">
+                Upload to Wardrobe
+            </button>
+
+        </form>
+
+        {% if pred3 %}
+            <p style="color:red; margin-top:1rem;">{{ pred3 }}</p>
+        {% endif %}
+        <p>{{ pred4 }}</p>
+        <p>{{ pred5 }}</p>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+<script>
+
+function loadFile(event) {
+    const image = document.getElementById('output');
+    image.src = URL.createObjectURL(event.target.files[0]);
+}
+
+const dropArea = document.getElementById("drop-area");
+
+dropArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropArea.style.borderColor = "var(--accent)";
+});
+
+dropArea.addEventListener("dragleave", () => {
+    dropArea.style.borderColor = "var(--border)";
+});
+
+dropArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    document.getElementById("img").files = e.dataTransfer.files;
+    loadFile({ target: { files: [file] } });
+});
+
+document.getElementById("uploadForm").addEventListener("submit", function() {
+    document.getElementById("loading").classList.remove("hidden");
+});
+
+</script>
